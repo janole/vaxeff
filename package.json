@@ -1,0 +1,12 @@
+{
+  "name": "vaxeff",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^7.2.1",
+    "jsdom": "^19.0.0",
+    "node-fetch": "^3.1.0"
+  }
+}
