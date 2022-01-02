@@ -8,15 +8,17 @@ const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL"
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
 
-function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, })
+function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", })
 {
     const countries = COUNTRIES;
 
-    var maxLeft = 100, maxRight = 100, scaleLeft = maxRight / maxLeft;
+    var maxLeft = 100, maxRight = 1, scaleLeft = maxRight / maxLeft;
 
     const chartData = countries.map(country =>
     {
-        const timeline = data[country].data.sort((a, b) => b.date.localeCompare(a.date));
+        const timeline = data[country].data
+            .filter(d => d.date < maxDate)
+            .sort((a, b) => b.date.localeCompare(a.date));
 
         const valid = timeline.find(d => left(d) > 0 && right(d) > 0);
 
@@ -72,6 +74,27 @@ function process(data)
         right: d => d?.excess_mortality_cumulative_per_million,
         labelLeft: "Percentage of population fully vaccinated",
         labelRight: "Excess mortality per million"
+    });
+
+    stats.push({
+        left: d => d?.people_fully_vaccinated_per_hundred,
+        right: d => d?.total_cases_per_million,
+        labelLeft: "Percentage of population fully vaccinated",
+        labelRight: "Total cases per million"
+    });
+
+    stats.push({
+        left: d => d?.people_fully_vaccinated_per_hundred,
+        right: d => d?.new_deaths_smoothed_per_million,
+        labelLeft: "Percentage of population fully vaccinated",
+        labelRight: "New deaths per million"
+    });
+
+    stats.push({
+        left: d => d?.people_fully_vaccinated_per_hundred,
+        right: d => d?.new_cases_smoothed_per_million,
+        labelLeft: "Percentage of population fully vaccinated",
+        labelRight: "New cases per million"
     });
 
     const charts = [];
