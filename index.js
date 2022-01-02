@@ -1,13 +1,12 @@
 import fetch from 'node-fetch';
+import zlib from 'zlib';
 import fs from 'fs';
 import { getBarChart } from './util.js';
 
 const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL", "DNK", "EST", "GRC", "HUN", "POL", "IRL", "PRT", "ROU", "SWE", "NOR", "CHE", "BGR",];
 
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
-const dst = "owid-covid-data.json";
-
-// const stats = fs.statSync(dst);
+const dst = "owid-covid-data.json.gz";
 
 function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, })
 {
@@ -87,15 +86,36 @@ function process(data)
     fs.writeFileSync("docs/index.html", "<html><body>" + charts.join("<br />") + "</body></html>");
 }
 
-fs.readFile(dst, {}, (err, data) =>
-{
-    if (!err)
-    {
-        process(JSON.parse(data));
-    }
-});
+const mtime = (fs.existsSync(dst) && fs.statSync(dst)?.mtime) ?? 0;
 
-fetch(src).then(res => res.json()).then(data =>
+if (mtime < Date.now() - 1000 * 60 * 60 * 2)
 {
-    fs.writeFileSync(dst, JSON.stringify(data, null, 2));
-});
+    fetch(src).then(res => res.json()).then(data =>
+    {
+        zlib.gzip(JSON.stringify(data), (err, data) =>
+        {
+            if (!err)
+            {
+                fs.writeFileSync(dst, data);
+            }
+        });
+
+        process(data);
+    });
+}
+else
+{
+    fs.readFile(dst, {}, (err, data) =>
+    {
+        if (!err)
+        {
+            zlib.gunzip(data, (err, data) =>
+            {
+                if (!err)
+                {
+                    process(JSON.parse(data.toString('utf8')));
+                }
+            });
+        }
+    });
+}
