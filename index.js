@@ -89,7 +89,10 @@ function process(data)
 
 fs.readFile(dst, {}, (err, data) =>
 {
-    process(JSON.parse(data));
+    if (!err)
+    {
+        process(JSON.parse(data));
+    }
 });
 
 fetch(src).then(res => res.json()).then(data =>
