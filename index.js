@@ -36,7 +36,7 @@ function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, })
     {
         if (valid.date)
         {
-            arr.push({ ...valid, id: valid.location, value: -left(valid) * scaleLeft, title: left(valid), type: 0, date: valid.date, });
+            arr.push({ ...valid, id: valid.location, value: -left(valid) * scaleLeft, title: left(valid) + "% @ " + valid.date, type: 0, date: valid.date, });
             arr.push({ ...valid, id: valid.location, value: right(valid), type: 1, date: valid.date, });
         }
 
