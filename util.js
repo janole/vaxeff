@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import jsdom from 'jsdom';
+import puppeteer from 'puppeteer';
+
 import StackedBarChart from './StackedBarChart.js';
 
 const { JSDOM } = jsdom;
@@ -43,4 +45,18 @@ function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRi
     return html;
 }
 
-export { getBarChart, };
+function svg2png({ svg, width, height, deviceScaleFactor = 2, path, })
+{
+    (async () =>
+    {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setViewport({ width, height, deviceScaleFactor, });
+        await page.setContent(svg);
+        await page.screenshot({ path });
+
+        await browser.close();
+    })();
+}
+
+export { getBarChart, svg2png, };
