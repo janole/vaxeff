@@ -108,7 +108,8 @@ function process(data)
 
     const html = '<html><head>'
         + '<meta name="viewport" content="width=device-width, initial-scale=1" />'
-        + '<meta name="twitter:card" content="COVID-19 Stats" />'
+        + '<meta name="twitter:title" content="COVID-19 Stats" />'
+        + '<meta name="twitter:site" content="@janole" />'
         + '<meta name="twitter:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
         + '<meta property="og:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
         + '</head><body>'
