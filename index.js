@@ -90,7 +90,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
     return chart;
 }
 
-function process(owid)
+async function process(owid)
 {
     const dimension = { width: 1024, height: 25 * COUNTRIES.length, }
     const stats = [];
@@ -145,7 +145,8 @@ function process(owid)
     fs.mkdirSync("docs", { recursive: true });
     fs.writeFileSync("docs/index.html", html);
 
-    svg2png({ svg: html, ...dimension, path: 'docs/screenshot.png', });
+    await svg2png({ svg: html, ...dimension, path: 'docs/screenshot.png', });
+
 }
 
 const mtime = (fs.existsSync(dst) && fs.statSync(dst)?.mtime) ?? 0;
