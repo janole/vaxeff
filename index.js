@@ -110,7 +110,7 @@ function process(data)
         + '<meta name="viewport" content="width=device-width, initial-scale=1" />'
         + '<meta name="twitter:card" content="COVID-19 Stats" />'
         + '<meta name="twitter:creator" content="@janole" />'
-        + '<meta property="og:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
+        + '<meta name="twitter:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
         + '</head><body>'
         + charts.join('<br />')
         + '</body></html>';
