@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 import { getBarChart, svg2png, } from './util.js';
 
 const COUNTRIES = [
-    'ISL', 'NOR', 'SWE', 'FIN', 'DNK',
+    'GRC', 'NOR', 'SWE', 'FIN', 'DNK',
     'DEU', 'CHE', 'POL', 'AUT', 'HUN',
     'IRL', 'GBR', 'FRA', 'NLD', 'BEL',
     'PRT', 'ESP', 'ITA', 'NLD', 'DEU',
@@ -95,32 +95,41 @@ async function process(owid)
     const dimension = { width: 1024, height: 25 * COUNTRIES.length, }
     const stats = [];
 
+    const labelLeft = "Percentage of population fully vaccinated";
+
     stats.push({
         left: d => d?.people_fully_vaccinated_per_hundred,
         right: d => d?.total_deaths_per_million,
-        labelLeft: "Percentage of population fully vaccinated",
-        labelRight: "Total deaths per million"
+        labelLeft,
+        labelRight: "Total deaths related to COVID-19 (per million)"
     });
 
     stats.push({
         left: d => d?.people_fully_vaccinated_per_hundred,
         right: d => d?.excess_mortality_cumulative_per_million,
-        labelLeft: "Percentage of population fully vaccinated",
-        labelRight: "Excess mortality per million"
+        labelLeft,
+        labelRight: "Excess mortality since January 2020 (per million)"
     });
 
     stats.push({
         left: d => d?.people_fully_vaccinated_per_hundred,
         right: d => d?.total_cases_per_million,
-        labelLeft: "Percentage of population fully vaccinated",
-        labelRight: "Total cases per million"
+        labelLeft,
+        labelRight: "Total COVID-19 cases (per million)"
     });
 
     stats.push({
         left: d => d?.people_fully_vaccinated_per_hundred,
-        right: d => d?.new_cases_smoothed_per_million,
-        labelLeft: "Percentage of population fully vaccinated",
-        labelRight: "New cases per million"
+        right: d => d?.new_cases_per_million,
+        labelLeft,
+        labelRight: "New COVID-19 cases (per million)"
+    });
+
+    stats.push({
+        left: d => d?.people_fully_vaccinated_per_hundred,
+        right: d => d?.new_cases_smoothed_per_million / 10 * 7,
+        labelLeft,
+        labelRight: "New COVID-19 cases, 7-day smoothed (per 100.000)"
     });
 
     const charts = [];
