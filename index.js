@@ -14,11 +14,11 @@ const COUNTRIES = [
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
 
-function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, })
+function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, maxRight = 1, })
 {
     const countries = COUNTRIES;
 
-    var maxLeft = 100, maxRight = 1, scaleLeft = maxRight / maxLeft;
+    var maxLeft = 100, scaleLeft = maxRight / maxLeft;
 
     // TODO: simplify the right()/left() calls where we're merging data[i] + info all the time
     const chartData = countries.map(country =>
