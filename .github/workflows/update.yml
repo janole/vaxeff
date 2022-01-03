@@ -16,3 +16,9 @@ jobs:
 
       - name: Build
         run: node index.js
+
+      - name: Commit and push
+        run: |
+          git add docs/index.html docs/screenshot.png
+          git commit -m "Update website"
+          git push origin main
