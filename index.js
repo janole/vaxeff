@@ -4,35 +4,49 @@ import fs from 'fs';
 import puppeteer from 'puppeteer';
 import { getBarChart } from './util.js';
 
-const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL", "DNK", "EST", "GRC", "HUN", "POL", "IRL", "PRT", "ROU", "SWE", "NOR", "CHE", "BGR", "HRV", "CZE", "LUX", "LVA", "LTU", "SVK", "SVN", "CYP",];
+const COUNTRIES = [
+    'ISL', 'NOR', 'SWE', 'FIN', 'DNK',
+    'DEU', 'CHE', 'POL', 'AUT', 'HUN',
+    'IRL', 'GBR', 'FRA', 'NLD', 'BEL',
+    'PRT', 'ESP', 'ITA', 'NLD', 'DEU',
+];
 
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
 
-function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", })
+function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, })
 {
     const countries = COUNTRIES;
 
     var maxLeft = 100, maxRight = 1, scaleLeft = maxRight / maxLeft;
 
+    // TODO: simplify the right()/left() calls where we're merging data[i] + info all the time
     const chartData = countries.map(country =>
     {
-        const timeline = data[country].data
+        const { data, ...info } = owid[country];
+
+        // filter and sort values from most recent to oldest
+        const timeline = data
             .filter(d => d.date < maxDate)
             .sort((a, b) => b.date.localeCompare(a.date));
 
-        const valid = timeline.find(d => left(d) > 0 && right(d) > 0);
+        // find newest value that contains both left and right values
+        const valid = timeline.find(d => left({ ...info, ...d }) > 0 && right({ ...info, ...d }) > 0);
 
-        const r = right(valid);
+        // find the biggest value on the right hand side of the chart (and add country data)
+        const r = right({ ...info, ...valid });
 
         if (r > maxRight)
         {
+            // clamp the max value to power-of-ten bands (5600 would yield 6000) TODO: is there a better algorithm?
             const high10 = Math.pow(10, parseInt(Math.log10(r)));
             maxRight = (parseInt(r / high10) + 1) * high10;
+
+            // recalculate the scale of the left hand side
             scaleLeft = maxRight / maxLeft;
         }
 
-        return { id: country, ...valid, location: data[country].location, };
+        return { ...info, ...valid, id: country, };
 
     }).reduce((arr, valid) =>
     {
@@ -47,20 +61,35 @@ function getChart({ data, left, right, sort, reverse, labelLeft, labelRight, max
     }, []);
 
     if (sort == "right")
+    {
         chartData.sort(((a, b) => right(b) - right(a)));
+    }
     else
+    {
         chartData.sort(((a, b) => left(b) - left(a)));
+    }
 
     if (reverse)
+    {
         chartData.reverse();
+    }
 
-    const chart = getBarChart({ chartData, xDomain: [-maxLeft * scaleLeft, maxRight], xFormat: d => d < 0 ? parseInt(-d / scaleLeft) + "%" : d, xLabelLeft: labelLeft, xLabel: "vs.", xLabelRight: labelRight, });
+    const chart = getBarChart({
+        chartData,
+        xDomain: [-maxLeft * scaleLeft, maxRight], xFormat: d => d < 0 ? parseInt(-d / scaleLeft) + "%" : d,
+        xLabelLeft: labelLeft,
+        xLabel: "vs.",
+        xLabelRight: labelRight,
+        width,
+        height,
+    });
 
     return chart;
 }
 
-function process(data)
+function process(owid)
 {
+    const dimension = { width: 1024, height: 25 * COUNTRIES.length, }
     const stats = [];
 
     stats.push({
@@ -95,8 +124,8 @@ function process(data)
 
     stats.forEach(stat =>
     {
-        charts.push(getChart({ data, ...stat, reverse: true, }));
-        charts.push(getChart({ data, ...stat, sort: "right", }));
+        charts.push(getChart({ ...dimension, owid, ...stat, reverse: true, }));
+        charts.push(getChart({ ...dimension, owid, ...stat, sort: "right", }));
     });
 
     const html = '<html><head>'
@@ -117,7 +146,7 @@ function process(data)
     {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 2, });
+        await page.setViewport({ ...dimension, deviceScaleFactor: 2, });
         await page.setContent(html);
         await page.screenshot({ path: 'docs/screenshot.png' });
 
