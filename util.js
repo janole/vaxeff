@@ -4,10 +4,9 @@ import StackedBarChart from './StackedBarChart.js';
 
 const { JSDOM } = jsdom;
 
-function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRight, })
+function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRight, width = 1024, height = 1024, })
 {
     const id = "chart";
-    const width = 1024, height = 768;
 
     const document = new JSDOM().window.document;
 
