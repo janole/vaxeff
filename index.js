@@ -31,10 +31,10 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
             .sort((a, b) => b.date.localeCompare(a.date));
 
         // find newest value that contains both left and right values
-        const valid = timeline.find(d => left({ ...info, ...d }) > 0 && right({ ...info, ...d }) > 0);
+        const valid = timeline.find(d => left(d) > 0 && right(d) > 0);
 
         // find the biggest value on the right hand side of the chart (and add country data)
-        const r = right({ ...info, ...valid });
+        const r = right(valid);
 
         if (r > maxRight)
         {
@@ -76,7 +76,8 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
 
     const chart = getBarChart({
         chartData,
-        xDomain: [-maxLeft * scaleLeft, maxRight], xFormat: d => d < 0 ? parseInt(-d / scaleLeft) + "%" : d,
+        xDomain: [-maxLeft * scaleLeft, maxRight],
+        xFormat: d => d < 0 ? parseInt(-d / scaleLeft) + "%" : d,
         xLabelLeft: labelLeft,
         xLabel: "vs.",
         xLabelRight: labelRight,
