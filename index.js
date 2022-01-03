@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import zlib from 'zlib';
 import fs from 'fs';
+import * as d3 from 'd3';
 
 import { getBarChart, svg2png, } from './util.js';
 
@@ -81,6 +82,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
         xLabelLeft: labelLeft,
         xLabel: "vs.",
         xLabelRight: labelRight,
+        xLabelBottomRight: "Updated @ " + d3.timeFormat("%H:%M %d %b %Y")(new Date()) + " — Source: https://ourworldindata.org/",
         width,
         height,
     });

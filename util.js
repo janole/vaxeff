@@ -6,7 +6,7 @@ import StackedBarChart from './StackedBarChart.js';
 
 const { JSDOM } = jsdom;
 
-function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRight, width = 1024, height = 1024, })
+function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRight, xLabelBottomLeft, xLabelBottomRight, width = 1024, height = 1024, })
 {
     const id = "chart";
 
@@ -35,6 +35,8 @@ function getBarChart({ chartData, xDomain, xFormat, xLabel, xLabelLeft, xLabelRi
         xLabel,
         xLabelLeft,
         xLabelRight,
+        xLabelBottomLeft,
+        xLabelBottomRight,
     }
 
     new StackedBarChart(chartData, config,);

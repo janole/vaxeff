@@ -34,6 +34,8 @@ function StackedBarChart(data, {
     xLabel, // a label for the x-axis
     xLabelLeft, // a label for the left side of the x-axis
     xLabelRight, // a label for the right side of the x-axis
+    xLabelBottomLeft, // a label for the bottom left of the x-axis
+    xLabelBottomRight, // a label for the bottom right of the x-axis
     yFormat, // a format specifier string for the y-axis
     colors = d3.schemeCategory10, // array of colors
 } = {})
@@ -121,7 +123,21 @@ function StackedBarChart(data, {
             .attr("text-anchor", "middle")
             .attr("font-weight", "bold")
             .attr("font-size", "1.5em")
-            .text(xLabelRight));
+            .text(xLabelRight))
+        .call(g => g.append("text")
+            .attr("x", marginLeft)
+            .attr("y", height - marginBottom - marginTop + 20)
+            .attr("fill", "#00000080")
+            .attr("text-anchor", "start")
+            .attr("font-size", "0.8em")
+            .text(xLabelBottomLeft))
+        .call(g => g.append("text")
+            .attr("x", width - marginRight)
+            .attr("y", height - marginBottom - marginTop + 20)
+            .attr("fill", "#00000080")
+            .attr("text-anchor", "end")
+            .attr("font-size", "0.8em")
+            .text(xLabelBottomRight));
 
     const bar = svg.append("g")
         .selectAll("g")
