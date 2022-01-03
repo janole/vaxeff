@@ -9,7 +9,7 @@ function StackedBarChart(data, {
     y = (d, i) => i, // given d in data, returns the (ordinal) y-value
     z = () => 1, // given d in data, returns the (categorical) z-value
     title, // given d in data, returns the title text
-    marginTop = 50, // top margin, in pixels
+    marginTop = 60, // top margin, in pixels
     marginRight = 40, // right margin, in pixels
     marginBottom = 30, // bottom margin, in pixels
     marginLeft = 40, // left margin, in pixels
