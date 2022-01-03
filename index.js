@@ -124,7 +124,7 @@ function process(data)
         const page = await browser.newPage();
         await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 2, });
         await page.setContent(html);
-        await page.screenshot({ path: 'screenshot.png' });
+        await page.screenshot({ path: 'docs/screenshot.png' });
 
         await browser.close();
     })();
