@@ -4,7 +4,7 @@ import fs from 'fs';
 import puppeteer from 'puppeteer';
 import { getBarChart } from './util.js';
 
-const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL", "DNK", "EST", "GRC", "HUN", "POL", "IRL", "PRT", "ROU", "SWE", "NOR", "CHE", "BGR", "HRV", "CZE", "LUX", "LVA", "LTU", "SVK", "SVN",];
+const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL", "DNK", "EST", "GRC", "HUN", "POL", "IRL", "PRT", "ROU", "SWE", "NOR", "CHE", "BGR", "HRV", "CZE", "LUX", "LVA", "LTU", "SVK", "SVN", "CYP",];
 
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
@@ -82,13 +82,6 @@ function process(data)
         right: d => d?.total_cases_per_million,
         labelLeft: "Percentage of population fully vaccinated",
         labelRight: "Total cases per million"
-    });
-
-    stats.push({
-        left: d => d?.people_fully_vaccinated_per_hundred,
-        right: d => d?.new_deaths_smoothed_per_million,
-        labelLeft: "Percentage of population fully vaccinated",
-        labelRight: "New deaths per million"
     });
 
     stats.push({
