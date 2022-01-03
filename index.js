@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import zlib from 'zlib';
 import fs from 'fs';
+import puppeteer from 'puppeteer';
 import { getBarChart } from './util.js';
 
 const COUNTRIES = ["DEU", "FRA", "GBR", "ITA", "NLD", "ESP", "FIN", "AUT", "BEL", "DNK", "EST", "GRC", "HUN", "POL", "IRL", "PRT", "ROU", "SWE", "NOR", "CHE", "BGR", "HRV", "CZE", "LUX", "LVA", "LTU", "SVK", "SVN",];
@@ -105,8 +106,28 @@ function process(data)
         charts.push(getChart({ data, ...stat, sort: "right", }));
     });
 
+    const html = '<html><head>'
+        + '<meta name="viewport" content="width=device-width, initial-scale=1" />'
+        + '<meta name="twitter:card" content="COVID-19 Stats" />'
+        + '<meta name="twitter:creator" content="@janole" />'
+        + '<meta property="og:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
+        + '</head><body>'
+        + charts.join('<br />')
+        + '</body></html>';
+
     fs.mkdirSync("docs", { recursive: true });
-    fs.writeFileSync("docs/index.html", "<html><body>" + charts.join("<br />") + "</body></html>");
+    fs.writeFileSync("docs/index.html", html);
+
+    (async () =>
+    {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setViewport({ width: 1024, height: 768, deviceScaleFactor: 2, });
+        await page.setContent(html);
+        await page.screenshot({ path: 'screenshot.png' });
+
+        await browser.close();
+    })();
 }
 
 const mtime = (fs.existsSync(dst) && fs.statSync(dst)?.mtime) ?? 0;
