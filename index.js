@@ -82,7 +82,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
         xLabelLeft: labelLeft,
         xLabel: "vs.",
         xLabelRight: labelRight,
-        xLabelBottomRight: "Updated @ " + d3.timeFormat("%H:%M %d %b %Y")(new Date()) + " — Source: https://ourworldindata.org/",
+        xLabelBottomRight: "Updated @ " + d3.timeFormat("%H:%M %d %b %Y")(new Date()) + " — Source: https://ourworldindata.org",
         width,
         height,
     });
