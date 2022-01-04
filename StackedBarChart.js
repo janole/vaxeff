@@ -5,17 +5,17 @@ function dropShadow({ svg, id = "drop-shadow", })
     var defs = svg.append("defs");
 
     var filter = defs.append("filter")
-        .attr("height", "125%")
+        .attr("height", "200%")
         .attr("id", id);
 
     filter.append("feGaussianBlur")
         .attr("in", "SourceAlpha")
-        .attr("stdDeviation", 2)
+        .attr("stdDeviation", 3)
         .attr("result", "blur");
 
     filter.append("feOffset")
         .attr("in", "blur")
-        .attr("dx", 0.25)
+        .attr("dx", 0.125)
         .attr("dy", 2)
         .attr("result", "offsetBlur");
 
