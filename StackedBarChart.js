@@ -76,7 +76,7 @@ function StackedBarChart(data, {
     xLabelBottomLeft, // a label for the bottom left of the x-axis
     xLabelBottomRight, // a label for the bottom right of the x-axis
     yFormat, // a format specifier string for the y-axis
-    colors = d3.schemeCategory10, // array of colors
+    colors = d3.schemeSet1, // array of colors
 } = {})
 {
     // Compute values.
