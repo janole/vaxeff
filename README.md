@@ -1,7 +1,7 @@
 # vaxeff
 Statistics on vaccination rates vs. various other data points.
 
-![Vaccination rate vs. COVID-19 related deaths per million](https://janole.github.io/vaxeff/screenshot.png)
+![Vaccination rate vs. COVID-19 related deaths per million](https://janole.github.io/vaxeff/screenshot00.png)
 
 ### About
 

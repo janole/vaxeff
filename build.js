@@ -158,8 +158,10 @@ async function process(owid)
     fs.mkdirSync("docs", { recursive: true });
     fs.writeFileSync("docs/index.html", html);
 
-    await svg2png({ svg: html, ...dimension, path: 'docs/screenshot.png', });
-
+    for (let i = charts.length - 1; i >= 0; i--)
+    {
+        await svg2png({ svg: charts[i], ...dimension, path: 'docs/screenshot' + ("00" + i).slice(-2) + '.png', });
+    };
 }
 
 const mtime = (fs.existsSync(dst) && fs.statSync(dst)?.mtime) ?? 0;
