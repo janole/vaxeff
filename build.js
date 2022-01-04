@@ -149,8 +149,8 @@ async function process(owid)
         + '<meta name="twitter:card" content="summary_large_image" />'
         + '<meta name="twitter:title" content="COVID-19 Stats" />'
         + '<meta name="twitter:site" content="@janole" />'
-        + '<meta name="twitter:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
-        + '<meta property="og:image" content="https://janole.github.io/vaxeff/screenshot.png" />'
+        + '<meta name="twitter:image" content="https://janole.github.io/vaxeff/screenshot00.png" />'
+        + '<meta property="og:image" content="https://janole.github.io/vaxeff/screenshot00.png" />'
         + '</head><body>'
         + charts.join('<br />')
         + '</body></html>';
