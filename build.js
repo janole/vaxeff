@@ -73,6 +73,11 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
     {
         chartData.reverse();
     }
+    else
+    {
+        // swap first two elements to switch colors (wowsers!)
+        [chartData[0], chartData[1]] = [chartData[1], chartData[0]];
+    }
 
     const chart = getBarChart({
         chartData,
