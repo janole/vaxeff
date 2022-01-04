@@ -1,5 +1,44 @@
 import * as d3 from 'd3';
 
+function dropShadow({ svg, id = "drop-shadow", })
+{
+    var defs = svg.append("defs");
+
+    var filter = defs.append("filter")
+        .attr("height", "125%")
+        .attr("id", id);
+
+    filter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 2)
+        .attr("result", "blur");
+
+    filter.append("feOffset")
+        .attr("in", "blur")
+        .attr("dx", 0.25)
+        .attr("dy", 2)
+        .attr("result", "offsetBlur");
+
+    filter.append("feFlood")
+        .attr("in", "offsetBlur")
+        .attr("flood-color", "#000")
+        .attr("flood-opacity", "0.125")
+        .attr("result", "offsetColor");
+
+    filter.append("feComposite")
+        .attr("in", "offsetColor")
+        .attr("in2", "offsetBlur")
+        .attr("operator", "in")
+        .attr("result", "offsetBlur");
+
+    var feMerge = filter.append("feMerge");
+
+    feMerge.append("feMergeNode")
+        .attr("in", "offsetBlur")
+    feMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
+}
+
 // Copyright 2021 Observable, Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/diverging-stacked-bar-chart
