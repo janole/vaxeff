@@ -31,10 +31,14 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
             .filter(d => d.date < maxDate)
             .sort((a, b) => b.date.localeCompare(a.date));
 
-        // find newest value that contains both left and right values
-        const valid = timeline.find(d => left(d) > 0 && right(d) > 0);
+        // find newest value for right hand side
+        const validRight = timeline.find(d => right(d) > 0);
+        // find newest value for left hand side (not newer than right hand side, though)
+        const validLeft = timeline.find(d => d.date <= validRight.date && left(d) > 0);
+        // combine left and right values, keep date from right hand side
+        const valid = { ...validLeft, ...validRight };
 
-        // find the biggest value on the right hand side of the chart (and add country data)
+        // find the biggest value on the right hand side of the chart
         const r = right(valid);
 
         if (r > maxRight)
