@@ -15,11 +15,9 @@ const COUNTRIES = [
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
 
-function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, maxRight = 1, })
+function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, maxLeft = 100, maxRight = 1, })
 {
     const countries = COUNTRIES;
-
-    var maxLeft = 100, scaleLeft = maxRight / maxLeft;
 
     // TODO: simplify the right()/left() calls where we're merging data[i] + info all the time
     const chartData = countries.map(country =>
@@ -46,9 +44,6 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
             // clamp the max value to power-of-ten bands (5600 would yield 6000) TODO: is there a better algorithm?
             const high10 = Math.pow(10, parseInt(Math.log10(r)));
             maxRight = (parseInt(r / high10) + 1) * high10;
-
-            // recalculate the scale of the left hand side
-            scaleLeft = maxRight / maxLeft;
         }
 
         return { ...info, ...valid, id: country, };
@@ -57,7 +52,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
     {
         if (valid.date)
         {
-            arr.push({ ...valid, id: valid.location, value: -left(valid) * scaleLeft, title: left(valid) + "% @ " + valid.date, type: 0, date: valid.date, });
+            arr.push({ ...valid, id: valid.location, value: -left(valid) * maxRight / maxLeft, title: left(valid) + "% @ " + valid.date, type: 0, date: valid.date, });
             arr.push({ ...valid, id: valid.location, value: right(valid), type: 1, date: valid.date, });
         }
 
@@ -81,8 +76,8 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
 
     const chart = getBarChart({
         chartData,
-        xDomain: [-maxLeft * scaleLeft, maxRight],
-        xFormat: d => d < 0 ? parseInt(-d / scaleLeft) + "%" : d,
+        xDomain: [-maxRight, maxRight],
+        xFormat: d => d < 0 ? parseInt(-d * maxLeft / maxRight) + "%" : d,
         xLabelLeft: labelLeft,
         xLabel: "vs.",
         xLabelRight: labelRight,
