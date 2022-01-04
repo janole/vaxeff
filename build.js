@@ -9,7 +9,7 @@ const COUNTRIES = [
     'GRC', 'NOR', 'SWE', 'FIN', 'DNK',
     'DEU', 'CHE', 'POL', 'AUT', 'HUN',
     'IRL', 'GBR', 'FRA', 'NLD', 'BEL',
-    'PRT', 'ESP', 'ITA', 'NLD', 'DEU',
+    'PRT', 'ESP', 'ITA', 'DEU',
 ];
 
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
