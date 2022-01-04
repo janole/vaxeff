@@ -133,6 +133,8 @@ function StackedBarChart(data, {
         title = i => T(O[i], i, data);
     }
 
+    dropShadow({ svg });
+
     svg.append("g")
         .attr("transform", `translate(0,${marginTop})`)
         .call(xAxis)
@@ -190,7 +192,8 @@ function StackedBarChart(data, {
         .attr("x", ([x1, x2]) => Math.min(xScale(x1), xScale(x2)))
         .attr("y", ({ i }) => yScale(Y[i]))
         .attr("width", ([x1, x2]) => Math.abs(xScale(x1) - xScale(x2)))
-        .attr("height", yScale.bandwidth());
+        .attr("height", yScale.bandwidth())
+        .style("filter", "url(#drop-shadow)");
 
     if (title) bar.append("title")
         .text(({ i }) => title(i));
