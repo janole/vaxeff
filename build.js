@@ -91,7 +91,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
 
 async function process(owid)
 {
-    const dimension = { width: 1024, height: 25 * COUNTRIES.length, }
+    const dimension = { width: 1024, height: 30 * COUNTRIES.length, }
     const stats = [];
 
     const labelLeft = "Percentage of population fully vaccinated";
