@@ -202,12 +202,11 @@ function StackedBarChart(data, {
         .attr("transform", `translate(${xScale(0)},0)`)
         .call(yAxis)
         .call(g => g.selectAll(".tick text")
-            .attr("dx", -3)
-            .attr("x", y =>
-            { // Find the minimum x-value for the corresponding y-value.
-                const x = d3.min(series, S => S.find(d => Y[d.i] === y)?.[0]);
-                return xScale(x) - xScale(0);
-            }));
+            .attr("fill", "#FFFFFF")
+            .attr("font-weight", "bold")
+            .attr("font-size", "1.2em")
+            .text((y, i) => y + "  •  " + ("00" + (series[0].length - i)).slice(-2))
+            .attr("x", -5));
 
     return Object.assign(svg.node(), { scales: { color } });
 }
