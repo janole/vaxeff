@@ -5,3 +5,4 @@ yarn-error.log
 # temp files
 **/.*.swp
 *.json
+*.json.gz
