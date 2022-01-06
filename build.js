@@ -15,7 +15,23 @@ const COUNTRIES = [
 const src = "https://covid.ourworldindata.org/data/owid-covid-data.json";
 const dst = "owid-covid-data.json.gz";
 
-function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, maxDate = "9999-99-99", width = 1024, height = 768, maxLeft = 100, maxRight = 1, })
+function getChart({
+    owid,
+    left,
+    right,
+    sort,
+    reverse,
+    labelLeft,
+    labelRight,
+    maxDate = "9999-99-99",
+    width = 1024,
+    height = 768,
+    maxLeft = 100,
+    maxRight = 1,
+    formatLeft = value => parseInt(value) + "%",
+    formatRight = value => value,
+    processDataPoint = (value, _country, _info) => value,
+} = {})
 {
     const countries = COUNTRIES;
 
@@ -33,8 +49,9 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
         const validRight = timeline.find(d => right(d) > 0);
         // find newest value for left hand side (not newer than right hand side, though)
         const validLeft = timeline.find(d => d.date <= validRight.date && left(d) > 0);
-        // combine left and right values, keep date from right hand side
-        const valid = { ...validLeft, ...validRight };
+
+        // combine left and right values, keep date from right hand side and postprocess
+        const valid = processDataPoint({ ...validLeft, ...validRight }, country, info);
 
         // find the biggest value on the right hand side of the chart
         const r = right(valid);
@@ -82,7 +99,7 @@ function getChart({ owid, left, right, sort, reverse, labelLeft, labelRight, max
     const chart = getBarChart({
         chartData,
         xDomain: [-maxRight, maxRight],
-        xFormat: d => d < 0 ? parseInt(-d * maxLeft / maxRight) + "%" : d,
+        xFormat: d => d < 0 ? formatLeft(-d * maxLeft / maxRight) : formatRight(d),
         xLabelLeft: labelLeft,
         xLabel: "vs.",
         xLabelRight: labelRight,
@@ -134,6 +151,14 @@ async function process(owid)
         right: d => d?.new_cases_smoothed_per_million / 10 * 7,
         labelLeft,
         labelRight: "New COVID-19 cases, 7-day smoothed (per 100.000)"
+    });
+
+    stats.push({
+        formatLeft: d => d,
+        left: d => (d?.stringency_index * 5 / 10 + d?.people_fully_vaccinated_per_hundred * 5 / 10),
+        labelLeft: "Vaccrate + Stringency Index",
+        right: d => d?.total_deaths_per_million,
+        labelRight: "Total deaths related to COVID-19 (per million)"
     });
 
     const charts = [];
