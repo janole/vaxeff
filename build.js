@@ -195,6 +195,8 @@ if (mtime < Date.now() - 1000 * 60 * 60 * 2)
 {
     fetch(src).then(res => res.json()).then(data =>
     {
+        if (typeof data !== "object") data = JSON.parse(data);
+
         zlib.gzip(JSON.stringify(data), (err, data) =>
         {
             if (!err)
